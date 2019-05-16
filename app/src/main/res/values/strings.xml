@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Captura de Áudio</string>
+    <string name="iniciar">Iniciar</string>
+    <string name="parar">Parar</string>
+    <string name="aguarde">Aguarde…</string>
+    <string name="erro_gravacao">Ocorreu um erro na gravação &#128546;</string>
+    <string name="pacotes_lidos">Pacotes lidos: %d</string>
+</resources>
