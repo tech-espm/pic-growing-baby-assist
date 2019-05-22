@@ -1,7 +1,8 @@
-package br.espm.capturaaudio;
+package br.espm.processaaudio;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements Servico.Callback {
+
+	private static final int REQUEST_CODE_AUDIO = 123;
 
 	// @@@ MSG_DADOS não será necessária no programa de verdade!
 	private TextView txtPacotesLidos;
@@ -44,13 +47,28 @@ public class MainActivity extends Activity implements Servico.Callback {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
 		if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-			Servico.iniciarServico(getApplication());
+			escolherAudio();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == REQUEST_CODE_AUDIO && resultCode == RESULT_OK && data != null)
+			Servico.iniciarServico(getApplication(), data.getData());
+	}
+
+	private void escolherAudio() {
+		Intent intent = new Intent();
+		intent.setType("audio/*");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(intent, REQUEST_CODE_AUDIO);
 	}
 
 	private boolean verificarPermissao() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-				requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+			if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 				return false;
 			}
 		}
@@ -80,7 +98,7 @@ public class MainActivity extends Activity implements Servico.Callback {
 		switch (Servico.getEstado()) {
 		case Servico.ESTADO_NOVO:
 			if (verificarPermissao())
-				Servico.iniciarServico(getApplication());
+				escolherAudio();
 			break;
 		case Servico.ESTADO_INICIADO:
 			Servico.pararServico();
@@ -94,8 +112,8 @@ public class MainActivity extends Activity implements Servico.Callback {
 	}
 
 	@Override
-	public void onErroGravacao() {
-		Toast.makeText(this, R.string.erro_gravacao, Toast.LENGTH_SHORT).show();
+	public void onErroDecodificacao() {
+		Toast.makeText(this, R.string.erro_decodificacao, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

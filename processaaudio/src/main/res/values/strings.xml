@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Processamento de Áudio</string>
+    <string name="iniciar">Iniciar</string>
+    <string name="parar">Parar</string>
+    <string name="aguarde">Aguarde…</string>
+    <string name="erro_decodificacao">Ocorreu um erro na decodificação &#128546;</string>
+    <string name="pacotes_lidos">Pacotes lidos: %d</string>
+</resources>

@@ -274,7 +274,7 @@ public class Servico extends Service implements Runnable, Handler.Callback {
 		while (estado == ESTADO_INICIADO) {
 			int totalLido = 0;
 			while (estado == ESTADO_INICIADO && totalLido < buffer.length) {
-				int amostrasLidas = recorder.read(buffer, 0, buffer.length - totalLido);
+				int amostrasLidas = recorder.read(buffer, totalLido, buffer.length - totalLido);
 				if (amostrasLidas < 0) {
 					// Algo saiu errado!
 					handler.sendEmptyMessage(MSG_ERRO);
